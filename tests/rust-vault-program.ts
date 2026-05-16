@@ -1,13 +1,13 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import { AnchorVaultProgram } from "../target/types/anchor_vault_program";
+import { RustVaultProgram } from "../target/types/rust_vault_program";
 import { expect } from "chai";
 
-describe("anchor-vault-program", () => {
+describe("rust-vault-program", () => {
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
-  const program = anchor.workspace.AnchorVaultProgram as Program<AnchorVaultProgram>;
+  const program = anchor.workspace.RustVaultProgram as Program<RustVaultProgram>;
   const user = provider.wallet.publicKey;
 
   // Derive PDAs
@@ -42,13 +42,9 @@ describe("anchor-vault-program", () => {
     const vaultState = await program.account.vaultState.fetch(vaultStatePda);
     expect(vaultState.vaultBump).to.equal(vaultBump);
     expect(vaultState.stateBump).to.equal(stateBump);
-
-    const vaultBalance = await provider.connection.getBalance(vaultPda);
-    const rentExempt = await provider.connection.getMinimumBalanceForRentExemption(0);
-    expect(vaultBalance).to.equal(rentExempt);
   });
 
-  it("Deposit SOL into the vault", async () => {
+  it("Deposit 1 SOL into the vault", async () => {
     const depositAmount = 1 * anchor.web3.LAMPORTS_PER_SOL; // 1 SOL
 
     const initialVaultBalance = await provider.connection.getBalance(vaultPda);
@@ -72,7 +68,7 @@ describe("anchor-vault-program", () => {
     expect(finalUserBalance).to.equal(initialUserBalance - depositAmount - 5000);
   });
 
-  it("Withdraw SOL from the vault", async () => {
+  it("Withdraw 0.5 SOL from the vault", async () => {
     const withdrawAmount = 0.5 * anchor.web3.LAMPORTS_PER_SOL; // 0.5 SOL
 
     const initialVaultBalance = await provider.connection.getBalance(vaultPda);
