@@ -1,0 +1,29 @@
+use anchor_lang::prelude::*;
+
+pub mod instructions;
+pub mod state;
+
+use instructions::*;
+
+declare_id!("5EJ3mk7v3EfGH1VaUsx3E5XT8gvDHfnLSXF53iopZefw");
+
+#[program]
+pub mod rust_vault_program {
+    use super::*;
+
+    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+        ctx.accounts.initialize(&ctx.bumps)
+    }
+
+    pub fn deposit(ctx: Context<Deposit>, amount: u64) -> Result<()> {
+        ctx.accounts.deposit(amount)
+    }
+
+    pub fn withdraw(ctx: Context<Withdraw>, amount: u64) -> Result<()> {
+        ctx.accounts.withdraw(amount)
+    }
+
+    pub fn close(ctx: Context<Close>) -> Result<()> {
+        ctx.accounts.close()
+    }
+}
